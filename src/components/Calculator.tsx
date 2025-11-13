@@ -109,11 +109,38 @@ function Calculator() {
     }
   }
 
+  function performUnaryOperation(operation: string) {
+    const inputValue = parseFloat(state.display)
+    let result: number
+
+    switch (operation) {
+      case 'square':
+        result = inputValue * inputValue
+        break
+      case 'sqrt':
+        result = Math.sqrt(inputValue)
+        break
+      case 'cbrt':
+        result = Math.cbrt(inputValue)
+        break
+      default:
+        return
+    }
+
+    setState({
+      display: String(result),
+      previousValue: null,
+      operation: null,
+      waitingForNewValue: true,
+    })
+  }
+
   const buttonClasses = "h-16 text-xl font-semibold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
   const numberButtonClasses = `${buttonClasses} bg-white text-gray-800 hover:bg-gray-100`
   const operatorButtonClasses = `${buttonClasses} bg-purple-600 text-white hover:bg-purple-700`
   const clearButtonClasses = `${buttonClasses} bg-red-500 text-white hover:bg-red-600`
   const equalsButtonClasses = `${buttonClasses} bg-green-500 text-white hover:bg-green-600`
+  const functionButtonClasses = `${buttonClasses} bg-blue-600 text-white hover:bg-blue-700`
 
   return (
     <div className="bg-white rounded-2xl shadow-2xl p-6">
@@ -125,22 +152,28 @@ function Calculator() {
       
       <div className="grid grid-cols-4 gap-3">
         <button
+          onClick={() => performUnaryOperation('square')}
+          className={functionButtonClasses}
+        >
+          x²
+        </button>
+        <button
+          onClick={() => performUnaryOperation('sqrt')}
+          className={functionButtonClasses}
+        >
+          √x
+        </button>
+        <button
+          onClick={() => performUnaryOperation('cbrt')}
+          className={functionButtonClasses}
+        >
+          ∛x
+        </button>
+        <button
           onClick={clear}
-          className={`${clearButtonClasses} col-span-2`}
+          className={clearButtonClasses}
         >
-          Clear
-        </button>
-        <button
-          onClick={() => performOperation('/')}
-          className={operatorButtonClasses}
-        >
-          ÷
-        </button>
-        <button
-          onClick={() => performOperation('*')}
-          className={operatorButtonClasses}
-        >
-          ×
+          C
         </button>
 
         <button onClick={() => inputNumber('7')} className={numberButtonClasses}>
@@ -153,10 +186,10 @@ function Calculator() {
           9
         </button>
         <button
-          onClick={() => performOperation('-')}
+          onClick={() => performOperation('/')}
           className={operatorButtonClasses}
         >
-          −
+          ÷
         </button>
 
         <button onClick={() => inputNumber('4')} className={numberButtonClasses}>
@@ -169,10 +202,10 @@ function Calculator() {
           6
         </button>
         <button
-          onClick={() => performOperation('+')}
+          onClick={() => performOperation('*')}
           className={operatorButtonClasses}
         >
-          +
+          ×
         </button>
 
         <button onClick={() => inputNumber('1')} className={numberButtonClasses}>
@@ -185,10 +218,10 @@ function Calculator() {
           3
         </button>
         <button
-          onClick={handleEquals}
-          className={`${equalsButtonClasses} row-span-2`}
+          onClick={() => performOperation('-')}
+          className={operatorButtonClasses}
         >
-          =
+          −
         </button>
 
         <button
@@ -199,6 +232,19 @@ function Calculator() {
         </button>
         <button onClick={inputDecimal} className={numberButtonClasses}>
           .
+        </button>
+        <button
+          onClick={() => performOperation('+')}
+          className={operatorButtonClasses}
+        >
+          +
+        </button>
+
+        <button
+          onClick={handleEquals}
+          className={`${equalsButtonClasses} col-span-4`}
+        >
+          =
         </button>
       </div>
     </div>
